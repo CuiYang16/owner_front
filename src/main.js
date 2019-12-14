@@ -4,6 +4,14 @@ import Vue from 'vue'
 import App from './App'
 import router from './router'
 
+//引入Element-ui
+import ElementUI from 'element-ui';
+import 'element-ui/lib/theme-chalk/index.css';
+Vue.use(ElementUI, {
+  size: 'small', zIndex: 3000 // set element-ui default size
+});
+
+
 Vue.config.productionTip = false
 
 /* eslint-disable no-new */
