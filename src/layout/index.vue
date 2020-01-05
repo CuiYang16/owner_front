@@ -74,7 +74,7 @@
 
             <el-container>
               <el-main>
-                <router-view/>
+                <router-view />
               </el-main>
 
               <el-footer>Footer</el-footer>
@@ -91,10 +91,9 @@
 export default {
   name: "Layout",
   data() {
-
     return {
-      containerCol:Number(18),
-      containerOffsetCol:Number(3)
+      containerCol: Number(18),
+      containerOffsetCol: Number(3)
     };
   }
 };
@@ -126,7 +125,7 @@ export default {
 body > .el-container {
   margin-bottom: 20px;
 }
-body{
-  margin: 0
+body {
+  margin: 0;
 }
 </style>

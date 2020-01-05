@@ -40,9 +40,7 @@ const mutations = {
 
 const actions = {
   // user login
-  login({
-    commit
-  }, userInfo) {
+  login({commit}, userInfo) {
     const {
       username,
       password

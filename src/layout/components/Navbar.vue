@@ -1,24 +1,14 @@
 <template>
-  <div class="navbar">
-
-  </div>
+  <div class="navbar"></div>
 </template>
 
 <script>
-
-
 export default {
-  components: {
-    
-  },
-  computed: {
- },
-  methods: {
-    
-  }
-}
+  components: {},
+  computed: {},
+  methods: {}
+};
 </script>
-
+  
 <style lang="scss" scoped>
-
 </style>
