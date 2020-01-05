@@ -1,16 +1,14 @@
 <template>
   <div id="home">
-    
+    <router-view />
   </div>
 </template>
 
 <script>
 export default {
-  name: 'HomePage',
+  name: "HomePage",
   data() {
-      return {
-          
-      }
-  },
-}
+    return {};
+  }
+};
 </script>
