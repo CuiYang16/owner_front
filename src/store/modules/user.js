@@ -2,7 +2,7 @@ import {
   userLogin,
   logout,
   getInfo
-} from '@/api/user/user'
+} from '@/api/user'
 import {
   getToken,
   setToken,
@@ -47,8 +47,8 @@ const actions = {
     } = userInfo
     return new Promise((resolve, reject) => {
       userLogin({
-        username: username.trim(),
-        password: password
+        userName: username.trim(),
+        passWord: password
       }).then(response => {
         const {
           data
