@@ -2,7 +2,7 @@ import {
   userLogin,
   logout,
   getInfo
-} from '@/api/user'
+} from '@/api/user/user'
 import {
   getToken,
   setToken,
@@ -52,9 +52,12 @@ const actions = {
       }).then(response => {
         const {
           data
-        } = response
-        commit('SET_TOKEN', data.token)
-        setToken(data.token)
+        } = response.data
+        console.log(response.headers.authorization);
+        commit('SET_TOKEN', response.headers.authorization)
+        
+        
+        setToken(response.headers.authorization)
         resolve()
       }).catch(error => {
         reject(error)
@@ -71,10 +74,10 @@ const actions = {
       getInfo(state.token).then(response => {
         const {
           data
-        } = response
+        } = response.data
 
         if (!data) {
-          reject('Verification failed, please Login again.')
+          reject('请重新登录！')
         }
 
         const {
