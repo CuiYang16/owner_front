@@ -50,6 +50,8 @@ const actions = {
         userName: username.trim(),
         passWord: password
       }).then(response => {
+        console.log(response);
+        
         const {
           data
         } = response.data
@@ -58,7 +60,7 @@ const actions = {
         
         
         setToken(response.headers.authorization)
-        resolve()
+        resolve(data)
       }).catch(error => {
         reject(error)
       })
@@ -72,28 +74,33 @@ const actions = {
   }) {
     return new Promise((resolve, reject) => {
       getInfo(state.token).then(response => {
-        const {
+        const 
           data
-        } = response.data
-
+         = response.data
         if (!data) {
           reject('请重新登录！')
         }
-
+        var roles =[];
         const {
-          roles,
+          list,
           name,
           avatar,
           introduction
         } = data
 
+
+        list.forEach(l => {
+          roles.push(l.roleName);
+        });
+        console.log(roles);
+        
         // roles must be a non-empty array
         if (!roles || roles.length <= 0) {
           reject('getInfo: roles must be a non-null array!')
         }
 
         commit('SET_ROLES', roles)
-        commit('SET_NAME', name)
+        commit('SET_NAME', "name")
         commit('SET_AVATAR', avatar)
         commit('SET_INTRODUCTION', introduction)
         resolve(data)

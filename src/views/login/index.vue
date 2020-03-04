@@ -77,13 +77,13 @@
       </div>-->
     </el-form>
 
-    <el-dialog :title="$t('login.thirdparty')" :visible.sync="showDialog">
+    <!-- <el-dialog :title="$t('login.thirdparty')" :visible.sync="showDialog">
       {{ $t('login.thirdpartyTips') }}
       <br />
       <br />
       <br />
       <social-sign />
-    </el-dialog>
+    </el-dialog> -->
   </div>
 </template>
 
@@ -104,9 +104,11 @@ export default {
       }
     };
     const validatePassword = (rule, value, callback) => {
+      
       if (value.length < 6) {
+        console.log(value)
         callback(new Error("The password can not be less than 6 digits"));
-      } else {
+      } else { console.log(value)
         callback();
       }
     };

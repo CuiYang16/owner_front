@@ -46,6 +46,7 @@ service.interceptors.response.use(
     const res = response
     const data=response.data
     // if the custom code is not 20000, it is judged as an error.
+    
     if (data.code !== 20000) {
       Message({
         message: data.msg|| '登录失败！',
@@ -66,7 +67,7 @@ service.interceptors.response.use(
           })
         })
       }
-      return Promise.reject(new Error(data.message || 'Error'))
+      return Promise.reject(new Error(data.msg || 'Error'))
     } else {
       return res
     }
