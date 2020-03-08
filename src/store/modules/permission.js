@@ -41,7 +41,11 @@ const state = {
 
 const mutations = {
   SET_ROUTES: (state, routes) => {
-    state.addRoutes = routes
+    //解决错误：Duplicate named routes definition 
+    state.addRoutes = (routes)=> {
+      router.matcher = new Router({mode: 'history'}).matcher;
+      router.addRoutes(routes)
+    }
     state.routes = constantRoutes.concat(routes)
   }
 }

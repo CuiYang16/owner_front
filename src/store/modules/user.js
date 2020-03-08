@@ -50,15 +50,11 @@ const actions = {
         userName: username.trim(),
         passWord: password
       }).then(response => {
-        console.log(response);
         
         const {
           data
         } = response.data
-        console.log(response.headers.authorization);
         commit('SET_TOKEN', response.headers.authorization)
-        
-        
         setToken(response.headers.authorization)
         resolve(data)
       }).catch(error => {
@@ -80,31 +76,26 @@ const actions = {
         if (!data) {
           reject('请重新登录！')
         }
-        var roles =[];
+       
         const {
           list,
-          name,
-          avatar,
-          introduction
+          resObj
         } = data
 
-
-        list.forEach(l => {
-          roles.push(l.roleName);
-        });
-        console.log(roles);
-        
         // roles must be a non-empty array
-        if (!roles || roles.length <= 0) {
+        if (!list || list.length <= 0) {
           reject('getInfo: roles must be a non-null array!')
         }
+        
+        
+        commit('SET_ROLES', list)
+        commit('SET_NAME', resObj.userName)
+        commit('SET_AVATAR', resObj.userAvatar)
+        commit('SET_INTRODUCTION', resObj.introduction)
 
-        commit('SET_ROLES', roles)
-        commit('SET_NAME', "name")
-        commit('SET_AVATAR', avatar)
-        commit('SET_INTRODUCTION', introduction)
         resolve(data)
       }).catch(error => {
+
         reject(error)
       })
     })
@@ -158,10 +149,11 @@ const actions = {
 
       commit('SET_TOKEN', token)
       setToken(token)
-
+console.log(await dispatch('getInfo'));
       const {
         roles
       } = await dispatch('getInfo')
+
 
       resetRouter()
 
