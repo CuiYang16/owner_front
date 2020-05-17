@@ -11,8 +11,7 @@ export function userLogin(data) {
 export function getInfo(token) {
   return request({
     url: '/sysuser/info',
-    method: 'get',
-    params: { token }
+    method: 'get'
   })
 }
 
@@ -20,5 +19,14 @@ export function logout() {
   return request({
     url: '/user/logout',
     method: 'post'
+  })
+}
+
+//获取所有用户信息
+export function getUsers(currentPage, pageSize) {
+  return request({
+    url: '/sysuser/users',
+    method: 'get',
+    params: { currentPage, pageSize }
   })
 }
