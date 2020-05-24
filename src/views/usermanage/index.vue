@@ -1,8 +1,8 @@
 <template>
   <div class="user-block">
     <el-card class="box-card" shadow="never">
-      <div>
-        <el-button size="small" type="primary" icon="el-icon-edit">添加用户</el-button>
+      <div class="action-bar">
+        <el-button size="small" type="primary" icon="el-icon-circle-plus-outline" @click="addUserClick">添加用户</el-button>
       </div>
 
       <el-table
@@ -113,6 +113,7 @@
         id="add-or-edit-user"
         :dialog-visible="userDialogVisible"
         :user-dialog-row="userDialogRow"
+        :user-option="userOption"
         @changeDialogVisible="changeDialogVisible"
       />
     </div>
@@ -121,8 +122,8 @@
 
 <script>
 
-import { getUsers } from '@/api/user/user'
-import AddOrEditUser from './components/AddOrEditUser'
+import { getUsers } from '@/api/user/user';
+import AddOrEditUser from './components/AddOrEditUser';
 
 export default {
   name: 'UserManage',
@@ -142,64 +143,71 @@ export default {
       },
       tableData: [],
       userDialogVisible: false,
-      userDialogRow: {}
-    }
+      userDialogRow: {},
+      userOption: ''
+    };
   },
   mounted() {
-    this.getAllUser(1, 10)
+    this.getAllUser(1, 10);
   },
 
   methods: {
     getAllUser(pageNum, pageSize) {
       getUsers(pageNum, pageSize).then(res => {
-        this.tableData = res.data.data.pageInfo.list
-        this.pageInfo = res.data.data.pageInfo
+        this.tableData = res.data.data.pageInfo.list;
+        this.pageInfo = res.data.data.pageInfo;
         // eslint-disable-next-line handle-callback-err
       }).catch(error => {
 
-      })
+      });
     },
     formatBoolean(row, column, cellValue) {
-      var ret = '' // 你想在页面展示的值
+      var ret = ''; // 你想在页面展示的值
       if (column.property === 'userSex') {
         if (cellValue) {
-          ret = '男' // 根据自己的需求设定
+          ret = '男'; // 根据自己的需求设定
         } else {
-          ret = '女'
+          ret = '女';
         }
       }
-      return ret
+      return ret;
     },
     handleClick(row) {
-      console.log(row)
-      this.userDialogVisible = !this.userDialogVisible
-      this.userDialogRow = Object.assign({}, row)
+      console.log(row);
+      this.userOption = 'and';
+      this.userDialogVisible = !this.userDialogVisible;
+      this.userDialogRow = Object.assign({}, row);
+    },
+    addUserClick() {
+      this.userOption = 'add';
+      this.userDialogVisible = !this.userDialogVisible;
+      this.userDialogRow = {};
     },
     changeDialogVisible() {
-      this.userDialogVisible = !this.userDialogVisible
+      this.userDialogVisible = !this.userDialogVisible;
     },
     handleSizeChange(val) {
-      console.log(`每页 ${val} 条`)
-      this.getAllUser(this.pageInfo.pageNum, val)
+      console.log(`每页 ${val} 条`);
+      this.getAllUser(this.pageInfo.pageNum, val);
     },
     handleCurrentChange(val) {
-      console.log(`当前页: ${val}`)
-      this.getAllUser(val, this.pageInfo.pageSize)
+      console.log(`当前页: ${val}`);
+      this.getAllUser(val, this.pageInfo.pageSize);
     },
     toggleSelection(rows) {
       if (rows) {
         rows.forEach(row => {
-          this.$refs.userTable.toggleRowSelection(row)
-        })
+          this.$refs.userTable.toggleRowSelection(row);
+        });
       } else {
-        this.$refs.userTable.clearSelection()
+        this.$refs.userTable.clearSelection();
       }
     },
     handleSelectionChange(val) {
-      this.multipleSelection = val
+      this.multipleSelection = val;
     }
   }
-}
+};
 </script>
 
 <style scoped>
@@ -209,5 +217,9 @@ export default {
 
     .user-page {
         margin-top: 2vh;
+    }
+    .action-bar{
+        float: right;
+        padding-bottom: 1vh;
     }
 </style>
