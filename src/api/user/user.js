@@ -30,3 +30,12 @@ export function getUsers(currentPage, pageSize) {
     params: { currentPage, pageSize }
   });
 }
+
+// 添加用户信息
+export function addUsers(userInfo) {
+  return request({
+    url: '/sysuser/adduser',
+    method: 'post',
+    data: userInfo
+  });
+}

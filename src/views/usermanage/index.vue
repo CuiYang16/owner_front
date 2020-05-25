@@ -115,6 +115,7 @@
         :user-dialog-row="userDialogRow"
         :user-option="userOption"
         @changeDialogVisible="changeDialogVisible"
+        @adduserconfirm="addUserConfirm"
       />
     </div>
   </div>
@@ -122,7 +123,7 @@
 
 <script>
 
-import { getUsers } from '@/api/user/user';
+import { getUsers, addUsers } from '@/api/user/user';
 import AddOrEditUser from './components/AddOrEditUser';
 
 export default {
@@ -182,6 +183,15 @@ export default {
       this.userOption = 'add';
       this.userDialogVisible = !this.userDialogVisible;
       this.userDialogRow = {};
+    },
+    addUserConfirm(userInfo) {
+      console.log('addUserConfirm' + userInfo);
+      addUsers(userInfo).then(res => {
+        console.log(res.data);
+      }
+      ).catch(error => {
+        console.log(error);
+      });
     },
     changeDialogVisible() {
       this.userDialogVisible = !this.userDialogVisible;

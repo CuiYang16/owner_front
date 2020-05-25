@@ -1,7 +1,7 @@
 <template>
   <div id="user-dialog">
-    <el-dialog title="用户信息" :visible.sync="dialogVisible" width="40%" @close="changeDialogVisible">
-      <el-form ref="userDialog" :model="userDialogRow" size="mini">
+    <el-dialog title="用户信息" :visible.sync="userDialogVisible" width="40%" @close="changeDialogVisible">
+      <el-form ref="userDialog" :model="userForm" size="mini">
         <el-form-item label="用户名" :label-width="formLabelWidth">
           <el-input v-model="userDialogRow.userName" autocomplete="off" :readonly="userOption==='and'" />
         </el-form-item>
@@ -81,7 +81,8 @@ export default {
   },
   data() {
     return {
-
+      userDialogVisible: this.dialogVisible,
+      userForm: this.userDialogRow,
       formLabelWidth: '120px',
       pickerOptions: {
         disabledDate(time) {
@@ -117,7 +118,11 @@ export default {
     changeDialogVisible() {
       this.$refs.userDialog.clearValidate();
       this.$refs.userDialog.resetFields();
-      this.$emit('changeDialogVisible');
+      if (this.userOption === 'add') {
+        this.$emit('adduserconfirm', this.userForm);
+      } else if (this.userOption === 'and') {
+        this.$emit('changeDialogVisible');
+      }
     }
   }
 };
