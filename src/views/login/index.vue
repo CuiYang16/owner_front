@@ -50,11 +50,19 @@
             <svg-icon :icon-class="passwordType === 'password' ? 'eye' : 'eye-open'" />
           </span>
         </el-form-item>
-      </el-tooltip>
 
-      <div class="remember-me">
-        <el-checkbox v-model="rememberMe" name="rememberMe">记住我</el-checkbox>
-      </div>
+      </el-tooltip>
+      <el-row>
+        <el-col :span="15">
+          <el-form-item>
+            <el-input v-model="loginForm.captcha" placeholder="请输入验证码" />
+          </el-form-item>
+        </el-col>
+        <el-col :span="8" :offset="1">
+          <img v-if="requestCodeSuccess" style="margin-top: 2px;" :src="randCodeImage" @click="handleChangeCheckCode">
+          <img v-else style="margin-top: 2px;" src="../../assets/checkcode.png" @click="handleChangeCheckCode">
+        </el-col>
+      </el-row>
       <el-button
         :loading="loading"
         type="primary"
@@ -95,6 +103,7 @@
 import { validUsername } from '@/utils/validate';
 import LangSelect from '@/components/LangSelect';
 import SocialSign from './components/SocialSignin';
+import { getCaptcha } from '@/api/user/user';
 
 export default {
   name: 'Login',
@@ -118,7 +127,9 @@ export default {
       loginForm: {
         username: 'admin',
         password: 'admin123',
-        rememberMe: true
+        rememberMe: true,
+        captcha: '',
+        checkKey: ''
       },
       loginRules: {
         username: [
@@ -126,6 +137,9 @@ export default {
         ],
         password: [
           { required: true, trigger: 'blur', validator: validatePassword }
+        ],
+        captcha: [
+          { required: true, trigger: 'blur' }
         ]
       },
       rememberMe: true,
@@ -134,7 +148,11 @@ export default {
       loading: false,
       showDialog: false,
       redirect: undefined,
-      otherQuery: {}
+      otherQuery: {},
+      captcha: '',
+      randCodeImage: '',
+      currdatetime: '',
+      requestCodeSuccess: false
     };
   },
   watch: {
@@ -151,8 +169,11 @@ export default {
   },
   created() {
     // window.addEventListener('storage', this.afterQRScan)
+    // this.currdatetime = new Date().getTime();
+    this.handleChangeCheckCode();
   },
   mounted() {
+    this.handleChangeCheckCode();
     if (this.loginForm.username === '') {
       this.$refs.username.focus();
     } else if (this.loginForm.password === '') {
@@ -163,6 +184,17 @@ export default {
     // window.removeEventListener('storage', this.afterQRScan)
   },
   methods: {
+    handleChangeCheckCode() {
+      this.currdatetime = new Date().getTime();
+      getCaptcha(this.currdatetime).then(res => {
+        console.log(res.data);
+        this.randCodeImage = res.data.data.image;
+        this.requestCodeSuccess = true;
+      }).catch(error => {
+        this.requestCodeSuccess = false;
+        console.log(error);
+      });
+    },
     checkCapslock({ shiftKey, key } = {}) {
       if (key && key.length === 1) {
         if (
@@ -193,9 +225,11 @@ export default {
         if (valid) {
           this.loading = true;
           this.loginForm.rememberMe = this.rememberMe;
+          this.loginForm.checkKey = this.currdatetime;
           this.$store
             .dispatch('user/login', this.loginForm)
             .then(() => {
+              this.handleChangeCheckCode();
               this.$router.push({
                 path: this.redirect || '/',
                 query: this.otherQuery
@@ -203,6 +237,7 @@ export default {
               this.loading = false;
             })
             .catch(() => {
+              this.handleChangeCheckCode();
               this.loading = false;
             });
         } else {

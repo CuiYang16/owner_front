@@ -7,6 +7,7 @@
 
       <el-table
         ref="userTable"
+        v-loading="userLoading"
         :data="tableData"
         size="mini"
         style="width: 100%;height: 100%"
@@ -145,7 +146,8 @@ export default {
       tableData: [],
       userDialogVisible: false,
       userDialogRow: {},
-      userOption: ''
+      userOption: '',
+      userLoading: false
     };
   },
   mounted() {
@@ -157,15 +159,15 @@ export default {
       getUsers(pageNum, pageSize).then(res => {
         this.tableData = res.data.data.pageInfo.list;
         this.pageInfo = res.data.data.pageInfo;
-        // eslint-disable-next-line handle-callback-err
+        this.userLoading = false;
       }).catch(error => {
-
+        console.log(error);
       });
     },
     formatBoolean(row, column, cellValue) {
       var ret = ''; // 你想在页面展示的值
       if (column.property === 'userSex') {
-        if (cellValue) {
+        if (cellValue === 1) {
           ret = '男'; // 根据自己的需求设定
         } else {
           ret = '女';
@@ -174,20 +176,23 @@ export default {
       return ret;
     },
     handleClick(row) {
-      console.log(row);
       this.userOption = 'and';
       this.userDialogVisible = !this.userDialogVisible;
       this.userDialogRow = Object.assign({}, row);
     },
     addUserClick() {
+      this.userLoading = true;
       this.userOption = 'add';
       this.userDialogVisible = !this.userDialogVisible;
       this.userDialogRow = {};
     },
     addUserConfirm(userInfo) {
-      console.log('addUserConfirm' + userInfo);
       addUsers(userInfo).then(res => {
-        console.log(res.data);
+        this.$message({
+          message: '添加用户成功！',
+          type: 'success'
+        });
+        this.getAllUser(1, this.pageInfo.pageSize);
       }
       ).catch(error => {
         console.log(error);

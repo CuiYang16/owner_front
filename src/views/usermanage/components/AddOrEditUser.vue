@@ -120,9 +120,8 @@ export default {
       this.$refs.userDialog.resetFields();
       if (this.userOption === 'add') {
         this.$emit('adduserconfirm', this.userForm);
-      } else if (this.userOption === 'and') {
-        this.$emit('changeDialogVisible');
       }
+      this.$emit('changeDialogVisible');
     }
   }
 };

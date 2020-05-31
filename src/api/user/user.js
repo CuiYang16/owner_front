@@ -7,6 +7,13 @@ export function userLogin(data) {
     data
   });
 }
+// 获取验证码
+export function getCaptcha(key) {
+  return request({
+    url: '/sysuser/randomImage/' + key,
+    method: 'get'
+  });
+}
 
 export function getInfo(token) {
   return request({
@@ -17,7 +24,7 @@ export function getInfo(token) {
 
 export function logout() {
   return request({
-    url: '/user/logout',
+    url: '/sysuser/logout',
     method: 'post'
   });
 }

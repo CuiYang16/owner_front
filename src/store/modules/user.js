@@ -11,7 +11,7 @@ import {
 import router, {
   resetRouter
 } from '@/router';
-
+import { Message } from 'element-ui';
 const state = {
   token: getToken(),
   name: '',
@@ -44,13 +44,17 @@ const actions = {
     const {
       username,
       password,
-      rememberMe
+      rememberMe,
+      captcha,
+      checkKey
     } = userInfo;
     return new Promise((resolve, reject) => {
       userLogin({
         userName: username.trim(),
         passWord: password,
-        rememberMe: rememberMe
+        rememberMe: rememberMe,
+        captcha: captcha,
+        checkKey: checkKey
       }).then(response => {
         const res = response.data;
         commit('SET_TOKEN', res.data.token);
@@ -61,7 +65,6 @@ const actions = {
       });
     });
   },
-
   // get user info
   getInfo({
     commit,
@@ -102,18 +105,22 @@ const actions = {
     dispatch
   }) {
     return new Promise((resolve, reject) => {
-      logout(state.token).then(() => {
-        commit('SET_TOKEN', '');
-        commit('SET_ROLES', []);
-        removeToken();
-        resetRouter();
+      logout().then(res => {
+        console.log(res.data);
+        if (res.data.success) {
+          commit('SET_TOKEN', '');
+          commit('SET_ROLES', []);
+          removeToken();
+          resetRouter();
 
-        // reset visited views and cached views
-        // to fixed https://github.com/PanJiaChen/vue-element-admin/issues/2485
-        dispatch('tagsView/delAllViews', null, {
-          root: true
-        });
-
+          // reset visited views and cached views
+          // to fixed https://github.com/PanJiaChen/vue-element-admin/issues/2485
+          dispatch('tagsView/delAllViews', null, {
+            root: true
+          });
+        } else {
+          Message.error(res.data.message);
+        }
         resolve();
       }).catch(error => {
         reject(error);

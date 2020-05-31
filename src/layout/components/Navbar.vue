@@ -36,14 +36,7 @@
               {{ $t('navbar.dashboard') }}
             </el-dropdown-item>
           </router-link>
-          <a target="_blank" href="https://github.com/PanJiaChen/vue-element-admin/">
-            <el-dropdown-item>
-              {{ $t('navbar.github') }}
-            </el-dropdown-item>
-          </a>
-          <a target="_blank" href="https://panjiachen.github.io/vue-element-admin-site/#/">
-            <el-dropdown-item>Docs</el-dropdown-item>
-          </a>
+
           <el-dropdown-item divided>
             <span style="display:block;" @click="logout">{{ $t('navbar.logOut') }}</span>
           </el-dropdown-item>
@@ -54,14 +47,14 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
-import Breadcrumb from '@/components/Breadcrumb'
-import Hamburger from '@/components/Hamburger'
-import ErrorLog from '@/components/ErrorLog'
-import Screenfull from '@/components/Screenfull'
-import SizeSelect from '@/components/SizeSelect'
-import LangSelect from '@/components/LangSelect'
-import Search from '@/components/HeaderSearch'
+import { mapGetters } from 'vuex';
+import Breadcrumb from '@/components/Breadcrumb';
+import Hamburger from '@/components/Hamburger';
+import ErrorLog from '@/components/ErrorLog';
+import Screenfull from '@/components/Screenfull';
+import SizeSelect from '@/components/SizeSelect';
+import LangSelect from '@/components/LangSelect';
+import Search from '@/components/HeaderSearch';
 
 export default {
   components: {
@@ -82,14 +75,14 @@ export default {
   },
   methods: {
     toggleSideBar() {
-      this.$store.dispatch('app/toggleSideBar')
+      this.$store.dispatch('app/toggleSideBar');
     },
     async logout() {
-      await this.$store.dispatch('user/logout')
-      this.$router.push(`/login?redirect=${this.$route.fullPath}`)
+      await this.$store.dispatch('user/logout');
+      this.$router.push(`/login?redirect=${this.$route.fullPath}`);
     }
   }
-}
+};
 </script>
 
 <style lang="scss" scoped>
