@@ -1,4 +1,5 @@
 import request from '@/utils/request';
+import { getAction, deleteAction, putAction, postAction, httpAction } from '@/api/manage';
 
 export function userLogin(data) {
   return request({
@@ -46,3 +47,8 @@ export function addUsers(userInfo) {
     data: userInfo
   });
 }
+
+const deleteUserById = (params) => deleteAction('/sysuser/deluser', params);
+export {
+  deleteUserById
+};

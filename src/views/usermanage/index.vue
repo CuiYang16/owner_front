@@ -1,6 +1,6 @@
 <template>
   <div class="user-block">
-    <el-card class="box-card" shadow="never">
+    <el-card ref="boxCard" class="box-card" shadow="never">
       <div class="action-bar">
         <el-button size="small" type="primary" icon="el-icon-circle-plus-outline" @click="addUserClick">添加用户</el-button>
       </div>
@@ -10,7 +10,8 @@
         v-loading="userLoading"
         :data="tableData"
         size="mini"
-        style="width: 100%;height: 100%"
+        :height="tableHeight"
+        style="width: 100%;"
         @selection-change="handleSelectionChange"
       >
         <el-table-column
@@ -91,22 +92,32 @@
           <template slot-scope="scope">
             <el-button type="text" size="small" @click="handleClick(scope.row)">查看</el-button>
             <el-button type="text" size="small">编辑</el-button>
-            <el-tag type="danger" size="small">删除</el-tag>
+            <el-tag type="danger" size="small" @click="delUser(scope.row)">删除</el-tag>
           </template>
         </el-table-column>
       </el-table>
-      <div class="user-page">
-        <el-pagination
-          background
-          :current-page="pageInfo.pageNum"
-          :page-sizes="[10, 20, 30, 50,100]"
-          :page-size="pageInfo.pageSize"
-          layout="total, sizes, prev, pager, next, jumper"
-          :total="pageInfo.size"
-          @size-change="handleSizeChange"
-          @current-change="handleCurrentChange"
-        />
-      </div>
+      <el-row>
+        <el-col :span="8">
+          <div class="batch-del">
+            <el-button type="danger" size="small">批量删除</el-button>
+          </div>
+        </el-col>
+        <el-col :span="16">
+          <div class="user-page">
+            <el-pagination
+              background
+              :current-page="pageInfo.pageNum"
+              :page-sizes="[10, 20, 30, 50,100]"
+              :page-size="pageInfo.pageSize"
+              layout="total, sizes, prev, pager, next, jumper"
+              :total="pageInfo.size"
+              @size-change="handleSizeChange"
+              @current-change="handleCurrentChange"
+            />
+          </div>
+        </el-col>
+      </el-row>
+
     </el-card>
     <div>
       <add-or-edit-user
@@ -124,7 +135,7 @@
 
 <script>
 
-import { getUsers, addUsers } from '@/api/user/user';
+import { getUsers, addUsers, deleteUserById } from '@/api/user/user';
 import AddOrEditUser from './components/AddOrEditUser';
 
 export default {
@@ -134,6 +145,7 @@ export default {
   },
   data() {
     return {
+      tableHeight: '73vh',
       pageInfo: {
         pageNum: 1,
         pageSize: 10,
@@ -198,7 +210,33 @@ export default {
         console.log(error);
       });
     },
+    delUser(row) {
+      this.$confirm('确认删除此用户' + row.userName + ', 是否继续?', '删除', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        this.delUesrConfirm(row.userId);
+      }).catch(() => {
+        this.$message({
+          type: 'info',
+          message: '已取消删除'
+        });
+      });
+    },
+    delUesrConfirm(userId) {
+      deleteUserById({ userId: userId }).then(res => {
+        this.$message({
+          type: 'success',
+          message: '删除成功!'
+        });
+        this.getAllUser(this.pageInfo.pageNum, this.pageInfo.pageSize);
+      }).catch(error => {
+        console.log(error);
+      });
+    },
     changeDialogVisible() {
+      this.userLoading = false;
       this.userDialogVisible = !this.userDialogVisible;
     },
     handleSizeChange(val) {
@@ -229,9 +267,12 @@ export default {
     .box-card {
         height: 100%;
     }
-
+   .batch-del{
+    margin-top: 1vh;
+   }
     .user-page {
-        margin-top: 2vh;
+        margin-top: 1vh;
+        float: right;
     }
     .action-bar{
         float: right;

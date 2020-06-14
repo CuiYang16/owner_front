@@ -56,7 +56,7 @@
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button size="mini" @click="changeDialogVisible()">取 消</el-button>
-        <el-button type="primary" size="mini" @click="changeDialogVisible()">确 定</el-button>
+        <el-button type="primary" size="mini" @click="dialogCongirm()">确 定</el-button>
       </div>
     </el-dialog>
   </div>
@@ -118,10 +118,13 @@ export default {
     changeDialogVisible() {
       this.$refs.userDialog.clearValidate();
       this.$refs.userDialog.resetFields();
+      this.$emit('changeDialogVisible');
+    },
+    dialogCongirm() {
+      this.changeDialogVisible();
       if (this.userOption === 'add') {
         this.$emit('adduserconfirm', this.userForm);
       }
-      this.$emit('changeDialogVisible');
     }
   }
 };
